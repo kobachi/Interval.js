@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
+	<title>Interval.js</title>
+	<script src="interval.js"></script>
+	<script>
+	function next(elm, tag){
+		var e = elm;
+		while(e != null){
+			e = e.nextSibling;
+			if(e.tagName == null){
+				continue;
+			}
+			if(e.tagName.toLowerCase() == tag.toLowerCase()){
+				break;
+			}
+		}
+		return e;
+	}
+
+	function text(elm){
+		if(typeof elm.textContent != "undefined"){
+			return elm.textContent;
+		}
+		if(typeof elm.innerText != "undefined"){
+			return elm.innerText;
+		}
+		return "";
+	}
+
+	function runSample(event){
+		if(typeof event == "undefined" && window.event){
+			event = window.event;
+			event.target = window.event.srcElement;
+		}
+		var n = next(event.target, "pre");
+		
+		eval(text(n));
+	}
+	window.onload = function(){
+		var runButtons = document.getElementsByTagName("input");
+		for(var i = 0; i < runButtons.length; i++){
+			runButtons[i].onclick = runSample;
+		}
+	};
+	</script>
+	<style>
+	article{
+		clear: both;
+	}
+	.sample{
+		
+	}
+	.run{
+		float: right;
+	}
+	</style>
+</head>
+<body>
+<h1>Interval.js</h1>
+<h2>Usage</h2>
+<article>
+<input type="button" class="run" value="Run" />
+<pre class="sample">var interval = new Interval(1, 10);
+var a = new Array();
+for(var i = 0; i &lt; 15; i++){
+	a.push(i + " " + ((interval.contains(i)) ? "contains." : "not contains"));
+}
+alert(interval.toString() + "\n" + a.join("\n"));</pre>
+</article>
+<article>
+<input type="button" class="run" value="Run" />
+<pre class="sample">var interval = new Interval("[", 1, 10, ")");
+var a = interval.toArray();
+alert(interval.toString() + "\n" + a.join(", "));</pre>
+</article>
+<article>
+<input type="button" class="run" value="Run" />
+<pre class="sample">var interval = new Interval(new Date(1), new Date(1414213562373));
+alert(interval.toString() + "\n" + interval.contains(new Date()));</pre>
+</article>
+</body>
+</html>
